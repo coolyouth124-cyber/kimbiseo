@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find \"/Users/joyunchae/Desktop/푸쉬업/워크숍-실습/정리해줘\" -type f -exec ls -lh {} \\\\;)",
+      "Bash(mv 보고서_초안.txt 보고서/)",
+      "Bash(mv 보고서_최종.txt 보고서/)",
+      "Bash(mv 보고서_최종_진짜최종.txt 보고서/)",
+      "Bash(mv 보고서_수정.txt 보고서/)",
+      "Bash(mv 메모.txt 메모/)",
+      "Bash(mv 기획_메모.txt 메모/)",
+      "Bash(mv 아이디어_메모_0301.txt 메모/)",
+      "Bash(mv 할일.txt 업무/)",
+      "Bash(mv 회의실.txt 업무/)",
+      "Bash(mv temp.csv 기타/)",
+      "Bash(mv 피드백.txt 기타/)",
+      "Bash(mv 링크모음.txt 기타/)",
+      "Bash(mv 나중에정리.txt 기타/)",
+      "Bash(mv 영수증_정리.txt 기타/)",
+      "WebFetch(domain:www.subtrac.kr)",
+      "Bash(grep -E \"\\\\.\\(json|md|py\\)$\")",
+      "WebSearch",
+      "WebFetch(domain:docs.google.com)",
+      "WebFetch(domain:borntowin.kr)"
+    ]
+  }
+}
