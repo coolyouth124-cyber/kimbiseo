@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SubTrackr 사이트 분석 보고서</title>
     <style>
+        :root {
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-border: rgba(255, 255, 255, 0.4);
+            --accent: #4CAF50;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -15,13 +22,56 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 40px 20px;
+            padding: 20px;
             color: #333;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
+        }
+
+        /* 네비게이션 */
+        .nav {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 24px;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            overflow-x: auto;
+        }
+
+        .nav-btn {
+            padding: 10px 16px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            background: transparent;
+            color: #666;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            white-space: nowrap;
+            min-height: 44px;
+        }
+
+        .nav-btn:hover {
+            background: rgba(76, 175, 80, 0.1);
+            color: #333;
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border-color: #4CAF50;
         }
 
         /* Header */
@@ -284,6 +334,17 @@
 </head>
 <body>
     <div class="container">
+        <!-- 네비게이션 -->
+        <div class="nav">
+            <a href="dashboard.html" class="nav-btn">📊 대시보드</a>
+            <a href="inventory.html" class="nav-btn">📦 인벤토리</a>
+            <a href="orders.html" class="nav-btn">🛒 주문 관리</a>
+            <a href="meeting-result.html" class="nav-btn">📋 회의록</a>
+            <a href="chart.html" class="nav-btn">📈 매출 현황</a>
+            <a href="diagram-view.html" class="nav-btn">📌 업무 프로세스</a>
+            <a href="report.html" class="nav-btn active">📝 사이트 분석</a>
+        </div>
+
         <!-- Header -->
         <div class="report-header">
             <h1>📊 SubTrackr 사이트 분석 보고서</h1>
