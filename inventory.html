@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPEARFIT 인벤토리 관리</title>
+
+    <!-- 🤖 PWA 설정 -->
+    <meta name="theme-color" content="#4CAF50">
+    <meta name="description" content="SPEARFIT 제품 인벤토리 관리 시스템">
+    <link rel="manifest" href="./manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <style>
+        :root {
+            /* Light mode colors */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9ff;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-border: rgba(255, 255, 255, 0.4);
+            --text-primary: #1a1a1a;
+            --text-secondary: #666;
+            --text-tertiary: #999;
+            --accent: #4CAF50;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.15);
+            --backdrop: rgba(255, 255, 255, 0.8);
+        }
+
+        html.dark-mode {
+            --bg-primary: #0f0f23;
+            --bg-secondary: #1a1a3e;
+            --card-bg: rgba(30, 30, 50, 0.7);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --text-tertiary: #808080;
+            --accent: #4CAF50;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.4);
+            --backdrop: rgba(30, 30, 50, 0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: var(--text-primary);
+            padding: 24px;
+            min-height: 100vh;
+            transition: background 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        html.dark-mode body {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 25%, #2d1b4e 50%, #1a2a4e 75%, #0f1f3e 100%);
+            background-size: 400% 400%;
+            animation: gradientShiftDark 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes gradientShiftDark {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .header-content h1 {
+            font-size: 32px;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .header-content p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                margin-bottom: 24px;
+                gap: 12px;
+            }
+
+            .header-content h1 {
+                font-size: 24px;
+            }
+
+            .header-content p {
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                flex-direction: column-reverse;
+                margin-bottom: 16px;
+            }
+
+            .header-content h1 {
+                font-size: 20px;
+                margin-bottom: 4px;
+            }
+
+            .header-content p {
+                font-size: 12px;
+            }
+
+            .theme-toggle-label {
+                display: none;
+            }
+        }
+
+        .theme-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 10px 16px;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .theme-toggle-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* 네비게이션 */
+        .nav {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 24px;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            overflow-x: auto;
+        }
+
+        .nav-btn {
+            padding: 10px 16px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            white-space: nowrap;
+            min-height: 44px;
+        }
+
+        .nav-btn:hover {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--text-primary);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        @media (max-width: 768px) {
+            .nav {
+                padding: 10px;
+                margin-bottom: 16px;
+            }
+
+            .nav-btn {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav {
+                padding: 8px;
+                gap: 6px;
+            }
+
+            .nav-btn {
+                padding: 8px 10px;
+                font-size: 11px;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            margin-bottom: 24px;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(76, 175, 80, 0.3);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(180deg, #4CAF50 0%, #45a049 100%);
+            border-radius: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                padding: 18px;
+                border-radius: 14px;
+                margin-bottom: 16px;
+            }
+
+            .card-title {
+                font-size: 16px;
+                margin-bottom: 16px;
+            }
+
+            .card-title::before {
+                height: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 14px;
+                border-radius: 12px;
+                margin-bottom: 12px;
+            }
+
+            .card-title {
+                font-size: 14px;
+                margin-bottom: 12px;
+            }
+
+            .card-title::before {
+                width: 3px;
+                height: 18px;
+            }
+        }
+
+        /* 통계 카드 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            border-radius: 12px;
+            padding: 16px;
+            color: white;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-card:nth-child(1) {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.8), rgba(118, 75, 162, 0.8));
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2);
+        }
+
+        .stat-card:nth-child(2) {
+            background: linear-gradient(135deg, rgba(240, 147, 251, 0.8), rgba(245, 87, 108, 0.8));
+            box-shadow: 0 8px 24px rgba(240, 147, 251, 0.2);
+        }
+
+        .stat-card:nth-child(3) {
+            background: linear-gradient(135deg, rgba(79, 172, 254, 0.8), rgba(0, 242, 254, 0.8));
+            box-shadow: 0 8px 24px rgba(79, 172, 254, 0.2);
+        }
+
+        .stat-card:nth-child(4) {
+            background: linear-gradient(135deg, rgba(67, 233, 123, 0.8), rgba(56, 249, 215, 0.8));
+            box-shadow: 0 8px 24px rgba(67, 233, 123, 0.2);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.95;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+                margin-bottom: 16px;
+            }
+
+            .stat-card {
+                padding: 14px;
+                border-radius: 10px;
+                min-height: 90px;
+            }
+
+            .stat-label {
+                font-size: 11px;
+                margin-bottom: 6px;
+            }
+
+            .stat-value {
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                margin-bottom: 12px;
+            }
+
+            .stat-card {
+                padding: 12px;
+                border-radius: 10px;
+                min-height: 80px;
+            }
+
+            .stat-label {
+                font-size: 10px;
+                margin-bottom: 4px;
+            }
+
+            .stat-value {
+                font-size: 18px;
+            }
+        }
+
+        /* 테이블 스타일 */
+        .inventory-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .inventory-table thead {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        html.dark-mode .inventory-table thead {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .inventory-table th {
+            padding: 14px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+        }
+
+        html.dark-mode .inventory-table th {
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .inventory-table td {
+            padding: 12px 14px;
+            color: var(--text-primary);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        html.dark-mode .inventory-table td {
+            border-bottom-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .inventory-table tbody tr:hover {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        html.dark-mode .inventory-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .product-name {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .quantity-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .quantity-high {
+            background: rgba(76, 175, 80, 0.2);
+            color: #2e7d32;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+
+        .quantity-medium {
+            background: rgba(255, 152, 0, 0.2);
+            color: #e65100;
+            border: 1px solid rgba(255, 152, 0, 0.3);
+        }
+
+        .quantity-low {
+            background: rgba(244, 67, 54, 0.2);
+            color: #c62828;
+            border: 1px solid rgba(244, 67, 54, 0.3);
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-input {
+            padding: 10px 14px;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            background: var(--card-bg);
+            color: var(--text-primary);
+            font-size: 13px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .inventory-table {
+                font-size: 12px;
+            }
+
+            .inventory-table th {
+                padding: 10px;
+                font-size: 11px;
+            }
+
+            .inventory-table td {
+                padding: 10px;
+            }
+
+            .filter-controls {
+                gap: 10px;
+                margin-bottom: 16px;
+            }
+
+            .filter-input {
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .inventory-table {
+                font-size: 11px;
+            }
+
+            .inventory-table th {
+                padding: 8px;
+                font-size: 10px;
+            }
+
+            .inventory-table td {
+                padding: 8px;
+            }
+
+            .product-name {
+                font-size: 12px;
+            }
+
+            .quantity-badge {
+                padding: 3px 8px;
+                font-size: 10px;
+            }
+
+            .filter-controls {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .filter-input {
+                width: 100%;
+                padding: 8px;
+                font-size: 12px;
+            }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 네비게이션 -->
+        <div class="nav">
+            <a href="dashboard.html" class="nav-btn">📊 대시보드</a>
+            <a href="inventory.html" class="nav-btn active">📦 인벤토리</a>
+            <a href="meeting-result.html" class="nav-btn">📋 회의록</a>
+            <a href="chart.html" class="nav-btn">📈 매출 현황</a>
+            <a href="diagram.svg" class="nav-btn">📌 업무 프로세스</a>
+            <a href="report.html" class="nav-btn">📝 사이트 분석</a>
+        </div>
+
+        <!-- 헤더 -->
+        <div class="header">
+            <div class="header-content">
+                <h1>📦 SPEARFIT 인벤토리</h1>
+                <p>제품 재고 관리 시스템</p>
+            </div>
+            <button class="theme-toggle" id="themeToggle" title="테마 전환">
+                <span id="themeIcon">🌙</span>
+                <span class="theme-toggle-label">다크모드</span>
+            </button>
+        </div>
+
+        <!-- 통계 -->
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <div class="stat-label">전체 제품</div>
+                <div class="stat-value" id="totalProducts">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">총 재고</div>
+                <div class="stat-value" id="totalStock">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">충분한 재고</div>
+                <div class="stat-value" id="adequateStock">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">부족 재고</div>
+                <div class="stat-value" id="lowStock">0</div>
+            </div>
+        </div>
+
+        <!-- 검색 및 필터 -->
+        <div class="card">
+            <div class="filter-controls">
+                <input type="text" class="filter-input" id="productFilter" placeholder="🔍 제품명으로 검색...">
+                <input type="text" class="filter-input" id="colorFilter" placeholder="색상 검색...">
+                <input type="text" class="filter-input" id="sizeFilter" placeholder="사이즈 검색...">
+            </div>
+        </div>
+
+        <!-- 인벤토리 테이블 -->
+        <div class="card">
+            <div class="card-title">📋 재고 현황</div>
+            <div style="overflow-x: auto;">
+                <table class="inventory-table" id="inventoryTable">
+                    <thead>
+                        <tr>
+                            <th>제품명</th>
+                            <th>색상</th>
+                            <th>사이즈</th>
+                            <th>입고</th>
+                            <th>보유</th>
+                            <th>상태</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <!-- 데이터 동적으로 삽입 -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <div class="empty-state-icon">📭</div>
+                <p>검색 결과가 없습니다.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 다크모드 토글
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const html = document.documentElement;
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                html.classList.add('dark-mode');
+                themeIcon.textContent = '☀️';
+                themeToggle.querySelector('.theme-toggle-label').textContent = '라이트모드';
+            }
+        }
+
+        function toggleTheme() {
+            if (html.classList.contains('dark-mode')) {
+                html.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+                themeIcon.textContent = '🌙';
+                themeToggle.querySelector('.theme-toggle-label').textContent = '다크모드';
+            } else {
+                html.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+                themeIcon.textContent = '☀️';
+                themeToggle.querySelector('.theme-toggle-label').textContent = '라이트모드';
+            }
+        }
+
+        loadTheme();
+        themeToggle.addEventListener('click', toggleTheme);
+
+        // 인벤토리 데이터 (CSV에서 추출)
+        const inventoryData = [
+            { name: '스피어핏 우먼즈 슬림핏 크롭 골지 슬리브리스', color: '아이보리', size: '1사이즈', inStock: 24, current: 24 },
+            { name: '스피어핏 우먼즈 슬림핏 크롭 골지 슬리브리스', color: '아이보리', size: '2사이즈', inStock: 25, current: 25 },
+            { name: '스피어핏 우먼즈 슬림핏 크롭 골지 슬리브리스', color: '검정', size: '1사이즈', inStock: 25, current: 25 },
+            { name: '스피어핏 우먼즈 슬림핏 크롭 골지 슬리브리스', color: '검정', size: '2사이즈', inStock: 25, current: 25 },
+            { name: '스피어핏 우먼즈 돌핀 팬츠', color: '검정', size: '1사이즈', inStock: 28, current: 28 },
+            { name: '스피어핏 우먼즈 돌핀 팬츠', color: '검정', size: '2사이즈', inStock: 28, current: 28 },
+            { name: '스피어핏 오버핏 머슬베어 T-Shirt', color: '검정', size: '1사이즈', inStock: 20, current: 20 },
+            { name: '스피어핏 오버핏 머슬베어 T-Shirt', color: '검정', size: '2사이즈', inStock: 19, current: 18 },
+            { name: '스피어핏 오버핏 머슬베어 T-Shirt', color: '검정', size: '3사이즈', inStock: 18, current: 18 },
+            { name: '스피어핏 오버핏 머슬베어 T-Shirt', color: '흰색', size: '1사이즈', inStock: 20, current: 20 },
+            { name: '스피어핏 오버핏 머슬베어 T-Shirt', color: '흰색', size: '2사이즈', inStock: 19, current: 19 },
+            { name: '스피어핏 오버핏 머슬베어 T-Shirt', color: '흰색', size: '3사이즈', inStock: 19, current: 19 },
+            { name: '스피어핏 데일리 머슬핏 티셔츠', color: '검정', size: '1사이즈', inStock: 19, current: 19 },
+            { name: '스피어핏 데일리 머슬핏 티셔츠', color: '검정', size: '2사이즈', inStock: 20, current: 20 },
+            { name: '스피어핏 데일리 머슬핏 티셔츠', color: '검정', size: '3사이즈', inStock: 19, current: 19 },
+            { name: '스피어핏 스나이퍼 버뮤다 팬츠', color: '검정', size: '1사이즈', inStock: 19, current: 19 },
+            { name: '스피어핏 스나이퍼 버뮤다 팬츠', color: '검정', size: '2사이즈', inStock: 20, current: 20 },
+            { name: '스피어핏 스나이퍼 버뮤다 팬츠', color: '검정', size: '3사이즈', inStock: 18, current: 18 },
+            { name: '스피어핏 리플렉티브 트랙 자켓', color: '-', size: '1사이즈', inStock: 27, current: 27 },
+            { name: '스피어핏 리플렉티브 트랙 자켓', color: '-', size: '2사이즈', inStock: 0, current: 0 },
+            { name: '스피어핏 리플렉티브 트랙 자켓', color: '-', size: '3사이즈', inStock: 26, current: 26 },
+            { name: '스피어핏 리플렉티브 트랙팬츠', color: '-', size: '1사이즈', inStock: 19, current: 19 },
+            { name: '스피어핏 리플렉티브 트랙팬츠', color: '-', size: '2사이즈', inStock: 2, current: 2 },
+            { name: '스피어핏 리플렉티브 트랙팬츠', color: '-', size: '3사이즈', inStock: 18, current: 18 },
+            { name: '스피어핏 리플렉티브 크롭 트랙 자켓', color: '-', size: '1사이즈', inStock: 24, current: 24 },
+            { name: '스피어핏 리플렉티브 크롭 트랙 자켓', color: '-', size: '2사이즈', inStock: 0, current: 0 },
+            { name: '스피어핏 데일리 볼캡', color: '검정', size: 'FREE', inStock: 0, current: 0 },
+            { name: '스피어핏 데일리 볼캡', color: '네이비', size: 'FREE', inStock: 0, current: 0 },
+            { name: '스피어핏 시그니처 볼캡', color: '검정', size: 'FREE', inStock: 0, current: 0 },
+            { name: '스피어핏 시그니처 볼캡', color: '네이비', size: 'FREE', inStock: 0, current: 0 }
+        ];
+
+        // 통계 업데이트
+        function updateStats(filteredData = inventoryData) {
+            const totalProducts = filteredData.length;
+            const totalStock = filteredData.reduce((sum, item) => sum + item.current, 0);
+            const adequateStock = filteredData.filter(item => item.current >= 15).length;
+            const lowStock = filteredData.filter(item => item.current > 0 && item.current < 15).length;
+
+            document.getElementById('totalProducts').textContent = totalProducts;
+            document.getElementById('totalStock').textContent = totalStock.toLocaleString('ko-KR');
+            document.getElementById('adequateStock').textContent = adequateStock;
+            document.getElementById('lowStock').textContent = lowStock;
+        }
+
+        // 테이블 렌더링
+        function renderTable(data) {
+            const tableBody = document.getElementById('tableBody');
+            const emptyState = document.getElementById('emptyState');
+
+            if (data.length === 0) {
+                tableBody.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            tableBody.innerHTML = data.map(item => {
+                let statusClass = 'quantity-high';
+                let statusText = '✅ 충분';
+
+                if (item.current === 0) {
+                    statusClass = 'quantity-low';
+                    statusText = '❌ 품절';
+                } else if (item.current < 15) {
+                    statusClass = 'quantity-medium';
+                    statusText = '⚠️ 부족';
+                }
+
+                return `
+                    <tr>
+                        <td class="product-name">${item.name}</td>
+                        <td>${item.color}</td>
+                        <td>${item.size}</td>
+                        <td><strong>${item.inStock}</strong></td>
+                        <td><strong>${item.current}</strong></td>
+                        <td><span class="quantity-badge ${statusClass}">${statusText}</span></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // 필터링
+        function filterData() {
+            const productFilter = document.getElementById('productFilter').value.toLowerCase();
+            const colorFilter = document.getElementById('colorFilter').value.toLowerCase();
+            const sizeFilter = document.getElementById('sizeFilter').value.toLowerCase();
+
+            const filtered = inventoryData.filter(item => {
+                return item.name.toLowerCase().includes(productFilter) &&
+                       item.color.toLowerCase().includes(colorFilter) &&
+                       item.size.toLowerCase().includes(sizeFilter);
+            });
+
+            renderTable(filtered);
+            updateStats(filtered);
+        }
+
+        // 이벤트 리스너
+        document.getElementById('productFilter').addEventListener('input', filterData);
+        document.getElementById('colorFilter').addEventListener('input', filterData);
+        document.getElementById('sizeFilter').addEventListener('input', filterData);
+
+        // 초기 렌더링
+        renderTable(inventoryData);
+        updateStats();
+    </script>
+</body>
+</html>
