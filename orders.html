@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주문 관리 시스템</title>
+
+    <!-- 🤖 PWA 설정 -->
+    <meta name="theme-color" content="#4CAF50">
+    <meta name="description" content="SPEARFIT 주문 관리 시스템">
+    <link rel="manifest" href="./manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9ff;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-border: rgba(255, 255, 255, 0.4);
+            --text-primary: #1a1a1a;
+            --text-secondary: #666;
+            --text-tertiary: #999;
+            --accent: #4CAF50;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        html.dark-mode {
+            --bg-primary: #0f0f23;
+            --bg-secondary: #1a1a3e;
+            --card-bg: rgba(30, 30, 50, 0.7);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --text-tertiary: #808080;
+            --accent: #4CAF50;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: var(--text-primary);
+            padding: 24px;
+            min-height: 100vh;
+            transition: background 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        html.dark-mode body {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 25%, #2d1b4e 50%, #1a2a4e 75%, #0f1f3e 100%);
+            background-size: 400% 400%;
+            animation: gradientShiftDark 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes gradientShiftDark {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .header-content h1 {
+            font-size: 32px;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .header-content p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                margin-bottom: 24px;
+            }
+
+            .header-content h1 {
+                font-size: 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                flex-direction: column-reverse;
+                margin-bottom: 16px;
+            }
+
+            .header-content h1 {
+                font-size: 20px;
+                margin-bottom: 4px;
+            }
+
+            .theme-toggle-label {
+                display: none;
+            }
+        }
+
+        .theme-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 10px 16px;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .nav {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 24px;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            overflow-x: auto;
+        }
+
+        .nav-btn {
+            padding: 10px 16px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            white-space: nowrap;
+            min-height: 44px;
+        }
+
+        .nav-btn:hover {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--text-primary);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            margin-bottom: 24px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(180deg, #4CAF50 0%, #45a049 100%);
+            border-radius: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                padding: 18px;
+                border-radius: 14px;
+            }
+
+            .card-title {
+                font-size: 16px;
+                margin-bottom: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 14px;
+                border-radius: 12px;
+            }
+
+            .card-title {
+                font-size: 14px;
+                margin-bottom: 12px;
+            }
+        }
+
+        /* 통계 카드 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            border-radius: 12px;
+            padding: 16px;
+            color: white;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .stat-card:nth-child(1) {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.8), rgba(118, 75, 162, 0.8));
+        }
+
+        .stat-card:nth-child(2) {
+            background: linear-gradient(135deg, rgba(240, 147, 251, 0.8), rgba(245, 87, 108, 0.8));
+        }
+
+        .stat-card:nth-child(3) {
+            background: linear-gradient(135deg, rgba(79, 172, 254, 0.8), rgba(0, 242, 254, 0.8));
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.95;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stat-card {
+                padding: 14px;
+                min-height: 90px;
+            }
+
+            .stat-value {
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .stat-card {
+                padding: 12px;
+                min-height: 80px;
+            }
+
+            .stat-value {
+                font-size: 18px;
+            }
+        }
+
+        /* 주문 테이블 */
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .orders-table thead {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        html.dark-mode .orders-table thead {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .orders-table th {
+            padding: 14px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+        }
+
+        html.dark-mode .orders-table th {
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .orders-table td {
+            padding: 12px 14px;
+            color: var(--text-primary);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            word-break: break-word;
+        }
+
+        html.dark-mode .orders-table td {
+            border-bottom-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .orders-table tbody tr:hover {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        html.dark-mode .orders-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .customer-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .order-date {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .order-item {
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .total-price {
+            font-weight: 700;
+            background: linear-gradient(90deg, #4CAF50, #45a049);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .search-controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            padding: 10px 14px;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            background: var(--card-bg);
+            color: var(--text-primary);
+            font-size: 13px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.2);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .orders-table {
+                font-size: 12px;
+            }
+
+            .orders-table th {
+                padding: 10px;
+                font-size: 11px;
+            }
+
+            .orders-table td {
+                padding: 10px;
+            }
+
+            .search-controls {
+                flex-direction: column;
+            }
+
+            .search-input {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .orders-table {
+                font-size: 11px;
+            }
+
+            .orders-table th {
+                padding: 8px;
+                font-size: 10px;
+            }
+
+            .orders-table td {
+                padding: 8px;
+            }
+
+            .customer-name {
+                font-size: 12px;
+            }
+
+            .order-item {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 네비게이션 -->
+        <div class="nav">
+            <a href="dashboard.html" class="nav-btn">📊 대시보드</a>
+            <a href="inventory.html" class="nav-btn">📦 인벤토리</a>
+            <a href="orders.html" class="nav-btn active">🛒 주문 관리</a>
+            <a href="meeting-result.html" class="nav-btn">📋 회의록</a>
+            <a href="chart.html" class="nav-btn">📈 매출 현황</a>
+            <a href="diagram.svg" class="nav-btn">📌 업무 프로세스</a>
+            <a href="report.html" class="nav-btn">📝 사이트 분석</a>
+        </div>
+
+        <!-- 헤더 -->
+        <div class="header">
+            <div class="header-content">
+                <h1>🛒 주문 관리 시스템</h1>
+                <p>SPEARFIT 고객 주문 내역</p>
+            </div>
+            <button class="theme-toggle" id="themeToggle" title="테마 전환">
+                <span id="themeIcon">🌙</span>
+                <span class="theme-toggle-label">다크모드</span>
+            </button>
+        </div>
+
+        <!-- 통계 -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">총 주문 수</div>
+                <div class="stat-value" id="totalOrders">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">총 매출액</div>
+                <div class="stat-value" id="totalRevenue">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">평균 주문액</div>
+                <div class="stat-value" id="avgOrderPrice">0</div>
+            </div>
+        </div>
+
+        <!-- 검색 -->
+        <div class="card">
+            <div class="search-controls">
+                <input type="text" class="search-input" id="nameFilter" placeholder="🔍 고객명 검색...">
+                <input type="text" class="search-input" id="itemFilter" placeholder="주문품목 검색...">
+                <input type="text" class="search-input" id="dateFilter" placeholder="주문날짜 검색 (YYYY-MM-DD)...">
+            </div>
+        </div>
+
+        <!-- 주문 테이블 -->
+        <div class="card">
+            <div class="card-title">📋 주문 내역</div>
+            <div style="overflow-x: auto;">
+                <table class="orders-table" id="ordersTable">
+                    <thead>
+                        <tr>
+                            <th>주문번호</th>
+                            <th>고객명</th>
+                            <th>주문일자</th>
+                            <th>주문품목</th>
+                            <th>주소</th>
+                            <th>총 금액</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <!-- 데이터 동적으로 삽입 -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <div class="empty-state-icon">📭</div>
+                <p>검색 결과가 없습니다.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 다크모드 토글
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const html = document.documentElement;
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                html.classList.add('dark-mode');
+                themeIcon.textContent = '☀️';
+                themeToggle.querySelector('.theme-toggle-label').textContent = '라이트모드';
+            }
+        }
+
+        function toggleTheme() {
+            if (html.classList.contains('dark-mode')) {
+                html.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+                themeIcon.textContent = '🌙';
+                themeToggle.querySelector('.theme-toggle-label').textContent = '다크모드';
+            } else {
+                html.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+                themeIcon.textContent = '☀️';
+                themeToggle.querySelector('.theme-toggle-label').textContent = '라이트모드';
+            }
+        }
+
+        loadTheme();
+        themeToggle.addEventListener('click', toggleTheme);
+
+        // 주문 데이터
+        const ordersData = [
+            { orderNo: 'ORD-001', name: '홍길동', date: '2026-04-15', items: '리플렉티브 트랙자켓 (1사이즈)', address: '서울시 강남구 테헤란로 123', price: 89000 },
+            { orderNo: 'ORD-002', name: '김영희', date: '2026-04-14', items: '리플렉티브 트랙팬츠 (2사이즈) x2', address: '부산시 해운대구 센텀중앙로 456', price: 180000 },
+            { orderNo: 'ORD-003', name: '이철수', date: '2026-04-13', items: '오버핏 머슬베어 T-Shirt (검정 2사이즈)', address: '대구시 수성구 범어로 789', price: 45000 },
+            { orderNo: 'ORD-004', name: '박지은', date: '2026-04-12', items: '시그니처 볼캡 (네이비) + 리플렉티브 트랙자켓 (2사이즈)', address: '인천시 연수구 송도동 234', price: 124000 },
+            { orderNo: 'ORD-005', name: '최민준', date: '2026-04-11', items: '오버핏 머슬베어 T-Shirt (흰색 1사이즈)', address: '수원시 팔달구 권선로 567', price: 45000 },
+            { orderNo: 'ORD-006', name: '정수진', date: '2026-04-10', items: '리플렉티브 트랙팬츠 (1사이즈) x3', address: '서울시 마포구 독립로 890', price: 270000 },
+            { orderNo: 'ORD-007', name: '유재석', date: '2026-04-09', items: '리플렉티브 트랙자켓 (3사이즈) + 트랙팬츠 (3사이즈)', address: '서울시 강동구 성내로 111', price: 213000 },
+            { orderNo: 'ORD-008', name: '이순신', date: '2026-04-08', items: '오버핏 머슬베어 T-Shirt (흰색 3사이즈) x2', address: '대전시 서구 한밭대로 222', price: 90000 },
+            { orderNo: 'ORD-009', name: '강호동', date: '2026-04-07', items: '시그니처 볼캡 (검정)', address: '서울시 서초구 강남대로 333', price: 0 },
+            { orderNo: 'ORD-010', name: '유승호', date: '2026-04-06', items: '리플렉티브 트랙자켓 (2사이즈) + 오버핏 머슬베어 T-Shirt (검정 1사이즈)', address: '용인시 기흥구 영덕동 444', price: 134000 },
+        ];
+
+        // 통계 업데이트
+        function updateStats(filteredData = ordersData) {
+            const totalOrders = filteredData.length;
+            const totalRevenue = filteredData.reduce((sum, order) => sum + order.price, 0);
+            const avgOrderPrice = totalOrders > 0 ? Math.round(totalRevenue / totalOrders) : 0;
+
+            document.getElementById('totalOrders').textContent = totalOrders;
+            document.getElementById('totalRevenue').textContent = totalRevenue.toLocaleString('ko-KR');
+            document.getElementById('avgOrderPrice').textContent = avgOrderPrice.toLocaleString('ko-KR');
+        }
+
+        // 테이블 렌더링
+        function renderTable(data) {
+            const tableBody = document.getElementById('tableBody');
+            const emptyState = document.getElementById('emptyState');
+
+            if (data.length === 0) {
+                tableBody.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            tableBody.innerHTML = data.map(order => `
+                <tr>
+                    <td><strong>${order.orderNo}</strong></td>
+                    <td class="customer-name">${order.name}</td>
+                    <td class="order-date">${order.date}</td>
+                    <td class="order-item">${order.items}</td>
+                    <td>${order.address}</td>
+                    <td class="total-price">${order.price.toLocaleString('ko-KR')}원</td>
+                </tr>
+            `).join('');
+        }
+
+        // 필터링
+        function filterData() {
+            const nameFilter = document.getElementById('nameFilter').value.toLowerCase();
+            const itemFilter = document.getElementById('itemFilter').value.toLowerCase();
+            const dateFilter = document.getElementById('dateFilter').value;
+
+            const filtered = ordersData.filter(order => {
+                return order.name.toLowerCase().includes(nameFilter) &&
+                       order.items.toLowerCase().includes(itemFilter) &&
+                       order.date.includes(dateFilter);
+            });
+
+            renderTable(filtered);
+            updateStats(filtered);
+        }
+
+        // 이벤트 리스너
+        document.getElementById('nameFilter').addEventListener('input', filterData);
+        document.getElementById('itemFilter').addEventListener('input', filterData);
+        document.getElementById('dateFilter').addEventListener('input', filterData);
+
+        // 초기 렌더링
+        renderTable(ordersData);
+        updateStats();
+    </script>
+</body>
+</html>
