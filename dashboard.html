@@ -881,6 +881,111 @@
             line-height: 1.5;
         }
 
+        /* SPEARFIT 갤러리 */
+        .spearfit-gallery {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .spearfit-item {
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        html.dark-mode .spearfit-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .spearfit-item:hover {
+            transform: translateY(-4px);
+            background: rgba(76, 175, 80, 0.05);
+            border-color: rgba(76, 175, 80, 0.3);
+            box-shadow: 0 8px 24px rgba(76, 175, 80, 0.1);
+        }
+
+        .spearfit-image {
+            font-size: 48px;
+            margin-bottom: 12px;
+            line-height: 1;
+        }
+
+        .spearfit-item h4 {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .spearfit-item p {
+            font-size: 11px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        @media (max-width: 1024px) {
+            .spearfit-gallery {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .spearfit-gallery {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .spearfit-image {
+                font-size: 40px;
+                margin-bottom: 10px;
+            }
+
+            .spearfit-item {
+                padding: 14px;
+            }
+
+            .spearfit-item h4 {
+                font-size: 12px;
+                margin-bottom: 6px;
+            }
+
+            .spearfit-item p {
+                font-size: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .spearfit-gallery {
+                gap: 10px;
+            }
+
+            .spearfit-image {
+                font-size: 36px;
+                margin-bottom: 8px;
+            }
+
+            .spearfit-item {
+                padding: 12px;
+                border-radius: 10px;
+            }
+
+            .spearfit-item h4 {
+                font-size: 11px;
+                margin-bottom: 4px;
+            }
+
+            .spearfit-item p {
+                font-size: 9px;
+            }
+        }
+
         @media (max-width: 768px) {
             .news-container {
                 gap: 10px;
@@ -1170,7 +1275,42 @@
                 </div>
             </div>
 
-            <!-- 섹션 5: 오늘의 핫한 뉴스 -->
+            <!-- 섹션 5: SPEARFIT 인기 상품 -->
+            <div class="card">
+                <div class="card-title">⭐ SPEARFIT 인기 상품</div>
+                <div class="spearfit-gallery">
+                    <div class="spearfit-item">
+                        <div class="spearfit-image">🧥</div>
+                        <div class="spearfit-info">
+                            <h4>리플렉티브 트랙 자켓</h4>
+                            <p>재고: 53개 | 상태: ✅ 충분</p>
+                        </div>
+                    </div>
+                    <div class="spearfit-item">
+                        <div class="spearfit-image">👖</div>
+                        <div class="spearfit-info">
+                            <h4>리플렉티브 트랙팬츠</h4>
+                            <p>재고: 39개 | 상태: ✅ 충분</p>
+                        </div>
+                    </div>
+                    <div class="spearfit-item">
+                        <div class="spearfit-image">👕</div>
+                        <div class="spearfit-info">
+                            <h4>오버핏 머슬베어 T-Shirt</h4>
+                            <p>재고: 94개 | 상태: ✅ 충분</p>
+                        </div>
+                    </div>
+                    <div class="spearfit-item">
+                        <div class="spearfit-image">🧢</div>
+                        <div class="spearfit-info">
+                            <h4>시그니처 볼캡</h4>
+                            <p>재고: 0개 | 상태: ⚠️ 품절</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 섹션 6: 오늘의 핫한 뉴스 -->
             <div class="card">
                 <div class="card-title">🔥 오늘의 핫한 뉴스 (2026-04-09)</div>
                 <div class="news-container">
