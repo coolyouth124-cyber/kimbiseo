@@ -592,6 +592,135 @@
             font-size: 48px;
             margin-bottom: 12px;
         }
+
+        /* 상품 갤러리 */
+        .product-gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .product-card {
+            border-radius: 12px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid var(--card-border);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        html.dark-mode .product-card {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .product-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 32px rgba(76, 175, 80, 0.2);
+            border-color: rgba(76, 175, 80, 0.4);
+        }
+
+        .product-image {
+            width: 100%;
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        html.dark-mode .product-image {
+            background: linear-gradient(135deg, #2a2a3e 0%, #1a1a2e 100%);
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 16px;
+        }
+
+        .product-info h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .product-stat {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .product-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: rgba(76, 175, 80, 0.2);
+            color: #2e7d32;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 1024px) {
+            .product-gallery {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .product-gallery {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .product-info {
+                padding: 14px;
+            }
+
+            .product-info h3 {
+                font-size: 13px;
+                margin-bottom: 8px;
+            }
+
+            .product-stat {
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .product-gallery {
+                gap: 12px;
+            }
+
+            .product-image {
+                aspect-ratio: 3/4;
+            }
+
+            .product-info {
+                padding: 12px;
+            }
+
+            .product-info h3 {
+                font-size: 12px;
+                margin-bottom: 6px;
+            }
+
+            .product-stat {
+                font-size: 10px;
+            }
+
+            .product-badge {
+                padding: 3px 10px;
+                font-size: 10px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -616,6 +745,45 @@
                 <span id="themeIcon">🌙</span>
                 <span class="theme-toggle-label">다크모드</span>
             </button>
+        </div>
+
+        <!-- 인기 상품 갤러리 -->
+        <div class="card">
+            <div class="card-title">⭐ 주요 상품</div>
+            <div class="product-gallery">
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 400'%3E%3Crect fill='%23f0f0f0' width='300' height='400'/%3E%3Ctext x='50%25' y='50%25' font-size='24' text-anchor='middle' dy='.3em' fill='%23999'%3E🧥%3C/text%3E%3C/svg%3E" alt="트랙 자켓">
+                    </div>
+                    <div class="product-info">
+                        <h3>스피어핏 리플렉티브 트랙 자켓</h3>
+                        <p class="product-stat">📊 재고: <strong>53개</strong> (3 사이즈)</p>
+                        <span class="product-badge">✅ 충분</span>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 400'%3E%3Crect fill='%23f0f0f0' width='300' height='400'/%3E%3Ctext x='50%25' y='50%25' font-size='24' text-anchor='middle' dy='.3em' fill='%23999'%3E👖%3C/text%3E%3C/svg%3E" alt="트랙팬츠">
+                    </div>
+                    <div class="product-info">
+                        <h3>스피어핏 리플렉티브 트랙팬츠</h3>
+                        <p class="product-stat">📊 재고: <strong>39개</strong> (3 사이즈)</p>
+                        <span class="product-badge">✅ 충분</span>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 400'%3E%3Crect fill='%23f0f0f0' width='300' height='400'/%3E%3Ctext x='50%25' y='50%25' font-size='24' text-anchor='middle' dy='.3em' fill='%23999'%3E👕%3C/text%3E%3C/svg%3E" alt="T-셔츠">
+                    </div>
+                    <div class="product-info">
+                        <h3>스피어핏 오버핏 머슬베어 T-Shirt</h3>
+                        <p class="product-stat">📊 재고: <strong>94개</strong> (6 색상)</p>
+                        <span class="product-badge">✅ 충분</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- 통계 -->
