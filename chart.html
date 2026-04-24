@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>매출 데이터 분석</title>
+    <style>
+        :root {
+            /* Light mode colors */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9ff;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-border: rgba(255, 255, 255, 0.4);
+            --text-primary: #1a1a1a;
+            --text-secondary: #666;
+            --text-tertiary: #999;
+            --chart-line: #4A90E2;
+            --chart-bar1: #50C878;
+            --chart-bar2: #3498DB;
+            --chart-bar3: #2ECC71;
+            --chart-bar4: #1E90FF;
+            --chart-bar5: #17B890;
+            --chart-bar6: #0099FF;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        html.dark-mode {
+            --bg-primary: #0f0f23;
+            --bg-secondary: #1a1a3e;
+            --card-bg: rgba(30, 30, 50, 0.7);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --text-tertiary: #808080;
+            --chart-line: #64B5F6;
+            --chart-bar1: #66BB6A;
+            --chart-bar2: #42A5F5;
+            --chart-bar3: #4CAF50;
+            --chart-bar4: #2196F3;
+            --chart-bar5: #26C6DA;
+            --chart-bar6: #03A9F4;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: var(--text-primary);
+            padding: 24px;
+            min-height: 100vh;
+            transition: background 0.3s ease;
+        }
+
+        html.dark-mode body {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 25%, #2d1b4e 50%, #1a2a4e 75%, #0f1f3e 100%);
+            background-size: 400% 400%;
+            animation: gradientShiftDark 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes gradientShiftDark {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 32px;
+        }
+
+        .header-content h1 {
+            font-size: 28px;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .header-content p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .theme-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 10px 16px;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .theme-toggle-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* 네비게이션 */
+        .nav {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 24px;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 10px 16px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-btn:hover {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--text-primary);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(74, 144, 226, 0.3);
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(74, 144, 226, 0.2);
+        }
+
+        .card-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(180deg, #4A90E2 0%, #50C878 100%);
+            border-radius: 2px;
+        }
+
+        /* 차트 컨테이너 */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            margin-bottom: 16px;
+        }
+
+        canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .chart-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        html.dark-mode .chart-info {
+            border-top-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--chart-line);
+        }
+
+        /* 범례 */
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 20px;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.02);
+            border-radius: 8px;
+        }
+
+        html.dark-mode .legend {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        /* 데이터 테이블 */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 13px;
+        }
+
+        .data-table thead {
+            background: rgba(74, 144, 226, 0.08);
+            border-bottom: 2px solid rgba(74, 144, 226, 0.2);
+        }
+
+        .data-table th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .data-table td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            color: var(--text-secondary);
+        }
+
+        html.dark-mode .data-table td {
+            border-bottom-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .data-table tr:hover {
+            background: rgba(74, 144, 226, 0.05);
+        }
+
+        .amount-cell {
+            font-family: 'Monaco', 'Courier New', monospace;
+            color: var(--chart-bar1);
+            font-weight: 600;
+        }
+
+        /* 모바일 반응형 */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .header-content h1 {
+                font-size: 24px;
+            }
+
+            .theme-toggle {
+                align-self: flex-start;
+            }
+
+            .chart-container {
+                height: 300px;
+            }
+
+            .chart-info {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .theme-toggle {
+                display: none;
+            }
+
+            .card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 네비게이션 -->
+        <div class="nav">
+            <a href="dashboard.html" class="nav-btn">📊 대시보드</a>
+            <a href="meeting-result.html" class="nav-btn">📋 회의록</a>
+            <a href="chart.html" class="nav-btn active">📈 매출 현황</a>
+            <a href="inventory.html" class="nav-btn">📦 인벤토리</a>
+            <a href="orders.html" class="nav-btn">🛒 주문 관리</a>
+            <a href="diagram-view.html" class="nav-btn">📌 업무 프로세스</a>
+            <a href="report.html" class="nav-btn">📝 사이트 분석</a>
+        </div>
+
+        <!-- 헤더 -->
+        <div class="header">
+            <div class="header-content">
+                <h1>📊 매출 데이터 분석</h1>
+                <p>2026년 1월 ~ 2월 판매 현황</p>
+            </div>
+            <button class="theme-toggle" id="themeToggle" title="테마 전환">
+                <span id="themeIcon">🌙</span>
+                <span class="theme-toggle-label">다크모드</span>
+            </button>
+        </div>
+
+        <!-- 월별 매출 추이 -->
+        <div class="card">
+            <div class="card-title">📈 월별 매출 추이</div>
+            <div class="chart-container">
+                <canvas id="lineChart"></canvas>
+            </div>
+            <div class="chart-info">
+                <div class="stat-item">
+                    <div class="stat-label">1월 매출</div>
+                    <div class="stat-value" id="jan-total">-</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">2월 매출</div>
+                    <div class="stat-value" id="feb-total">-</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">전체 매출</div>
+                    <div class="stat-value" id="total-sales">-</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">전체 판매량</div>
+                    <div class="stat-value" id="total-quantity">-</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 제품별 비교 -->
+        <div class="card">
+            <div class="card-title">📊 제품별 매출 비교</div>
+            <div class="chart-container">
+                <canvas id="barChart"></canvas>
+            </div>
+            <div class="legend" id="barLegend"></div>
+        </div>
+
+        <!-- 상세 데이터 테이블 -->
+        <div class="card">
+            <div class="card-title">📋 상세 판매 데이터</div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>날짜</th>
+                        <th>제품</th>
+                        <th>카테고리</th>
+                        <th style="text-align: right;">수량</th>
+                        <th style="text-align: right;">단가</th>
+                        <th style="text-align: right;">매출액</th>
+                    </tr>
+                </thead>
+                <tbody id="dataTableBody">
+                    <!-- JavaScript에서 동적으로 생성 -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // CSV 데이터 (HTML에 임베드)
+        const csvData = `날짜,제품,카테고리,수량,단가,매출액,지역
+2026-01-05,무선 이어폰,전자기기,45,89000,4005000,서울
+2026-01-05,보조배터리,전자기기,32,35000,1120000,서울
+2026-01-05,텀블러,생활용품,78,25000,1950000,부산
+2026-01-08,무선 이어폰,전자기기,52,89000,4628000,서울
+2026-01-08,블루투스 스피커,전자기기,18,120000,2160000,대구
+2026-01-08,텀블러,생활용품,65,25000,1625000,서울
+2026-01-12,보조배터리,전자기기,41,35000,1435000,부산
+2026-01-12,무선 충전기,전자기기,29,45000,1305000,서울
+2026-01-12,에코백,생활용품,93,15000,1395000,대구
+2026-01-15,무선 이어폰,전자기기,38,89000,3382000,부산
+2026-01-15,블루투스 스피커,전자기기,22,120000,2640000,서울
+2026-01-15,텀블러,생활용품,84,25000,2100000,서울
+2026-01-19,보조배터리,전자기기,55,35000,1925000,대구
+2026-01-19,에코백,생활용품,110,15000,1650000,서울
+2026-01-19,무선 충전기,전자기기,33,45000,1485000,부산
+2026-01-22,무선 이어폰,전자기기,61,89000,5429000,서울
+2026-01-22,텀블러,생활용품,72,25000,1800000,대구
+2026-01-22,블루투스 스피커,전자기기,15,120000,1800000,부산
+2026-01-26,보조배터리,전자기기,48,35000,1680000,서울
+2026-01-26,에코백,생활용품,88,15000,1320000,서울
+2026-01-26,무선 충전기,전자기기,37,45000,1665000,대구
+2026-02-01,무선 이어폰,전자기기,70,89000,6230000,서울
+2026-02-01,텀블러,생활용품,95,25000,2375000,부산
+2026-02-01,보조배터리,전자기기,43,35000,1505000,서울
+2026-02-05,블루투스 스피커,전자기기,25,120000,3000000,서울
+2026-02-05,에코백,생활용품,120,15000,1800000,대구
+2026-02-05,무선 충전기,전자기기,31,45000,1395000,부산
+2026-02-10,무선 이어폰,전자기기,58,89000,5162000,대구
+2026-02-10,텀블러,생활용품,67,25000,1675000,서울
+2026-02-10,보조배터리,전자기기,39,35000,1365000,서울`;
+
+        // 유틸리티 함수
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        function parseCSV(csv) {
+            const lines = csv.trim().split('\n');
+            const headers = lines[0].split(',');
+            const data = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                const obj = {};
+                const currentLine = lines[i].split(',');
+                for (let j = 0; j < headers.length; j++) {
+                    obj[headers[j]] = currentLine[j];
+                }
+                data.push(obj);
+            }
+            return data;
+        }
+
+        // 데이터 파싱
+        const salesData = parseCSV(csvData);
+
+        // 월별 매출 집계
+        function getMonthlyData() {
+            const monthly = {};
+            salesData.forEach(item => {
+                const date = item['날짜'];
+                const month = date.substring(0, 7); // YYYY-MM
+                const amount = parseInt(item['매출액']);
+                monthly[month] = (monthly[month] || 0) + amount;
+            });
+            return monthly;
+        }
+
+        // 제품별 매출 집계
+        function getProductData() {
+            const products = {};
+            salesData.forEach(item => {
+                const product = item['제품'];
+                const amount = parseInt(item['매출액']);
+                if (!products[product]) {
+                    products[product] = 0;
+                }
+                products[product] += amount;
+            });
+            return products;
+        }
+
+        // 차트 색상
+        const colors = ['#4A90E2', '#50C878', '#3498DB', '#2ECC71', '#1E90FF', '#17B890'];
+        const darkColors = ['#64B5F6', '#66BB6A', '#42A5F5', '#4CAF50', '#2196F3', '#26C6DA'];
+
+        function getChartColors() {
+            return document.documentElement.classList.contains('dark-mode') ? darkColors : colors;
+        }
+
+        // 월별 매출 선 그래프
+        function drawLineChart() {
+            const canvas = document.getElementById('lineChart');
+            const ctx = canvas.getContext('2d');
+            const monthlyData = getMonthlyData();
+            const months = Object.keys(monthlyData).sort();
+            const values = months.map(m => monthlyData[m]);
+
+            // Canvas 크기 설정
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * window.devicePixelRatio;
+            canvas.height = rect.height * window.devicePixelRatio;
+            ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+            const width = rect.width;
+            const height = rect.height;
+            const padding = { top: 40, right: 40, bottom: 60, left: 60 };
+            const chartWidth = width - padding.left - padding.right;
+            const chartHeight = height - padding.top - padding.bottom;
+
+            // 배경
+            const isDark = document.documentElement.classList.contains('dark-mode');
+            ctx.fillStyle = isDark ? 'rgba(30, 30, 50, 0)' : 'rgba(255, 255, 255, 0)';
+
+            // 축 그리기
+            ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(padding.left, padding.top);
+            ctx.lineTo(padding.left, height - padding.bottom);
+            ctx.lineTo(width - padding.right, height - padding.bottom);
+            ctx.stroke();
+
+            // Y축 그리드 및 레이블
+            const maxValue = Math.max(...values);
+            const yInterval = Math.ceil(maxValue / 5 / 1000000) * 1000000;
+            ctx.fillStyle = isDark ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)';
+            ctx.font = '12px sans-serif';
+            ctx.textAlign = 'right';
+
+            for (let i = 0; i <= 5; i++) {
+                const y = height - padding.bottom - (i * chartHeight / 5);
+                const value = (i * yInterval);
+
+                // 그리드
+                ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)';
+                ctx.beginPath();
+                ctx.moveTo(padding.left, y);
+                ctx.lineTo(width - padding.right, y);
+                ctx.stroke();
+
+                // 레이블
+                ctx.fillText((value / 1000000).toFixed(1) + '억', padding.left - 10, y + 4);
+            }
+
+            // X축 레이블
+            ctx.textAlign = 'center';
+            months.forEach((month, i) => {
+                const x = padding.left + (i * chartWidth / (months.length - 1 || 1));
+                ctx.fillText(month, x, height - padding.bottom + 25);
+            });
+
+            // 선 그리기
+            const chartColor = getChartColors()[0];
+            ctx.strokeStyle = chartColor;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+
+            months.forEach((month, i) => {
+                const x = padding.left + (i * chartWidth / (months.length - 1 || 1));
+                const y = height - padding.bottom - ((monthlyData[month] / yInterval) * (chartHeight / 5));
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            ctx.stroke();
+
+            // 포인트 그리기
+            ctx.fillStyle = chartColor;
+            months.forEach((month, i) => {
+                const x = padding.left + (i * chartWidth / (months.length - 1 || 1));
+                const y = height - padding.bottom - ((monthlyData[month] / yInterval) * (chartHeight / 5));
+                ctx.beginPath();
+                ctx.arc(x, y, 5, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // 통계 업데이트
+            document.getElementById('jan-total').textContent = formatNumber(monthlyData['2026-01'] || 0) + '원';
+            document.getElementById('feb-total').textContent = formatNumber(monthlyData['2026-02'] || 0) + '원';
+            document.getElementById('total-sales').textContent = formatNumber(values.reduce((a, b) => a + b, 0)) + '원';
+            document.getElementById('total-quantity').textContent = formatNumber(salesData.reduce((sum, item) => sum + parseInt(item['수량']), 0)) + '개';
+        }
+
+        // 제품별 매출 막대 그래프
+        function drawBarChart() {
+            const canvas = document.getElementById('barChart');
+            const ctx = canvas.getContext('2d');
+            const productData = getProductData();
+            const products = Object.keys(productData).sort((a, b) => productData[b] - productData[a]);
+            const values = products.map(p => productData[p]);
+
+            // Canvas 크기 설정
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * window.devicePixelRatio;
+            canvas.height = rect.height * window.devicePixelRatio;
+            ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+            const width = rect.width;
+            const height = rect.height;
+            const padding = { top: 40, right: 40, bottom: 80, left: 60 };
+            const chartWidth = width - padding.left - padding.right;
+            const chartHeight = height - padding.top - padding.bottom;
+
+            // 축 그리기
+            const isDark = document.documentElement.classList.contains('dark-mode');
+            ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(padding.left, padding.top);
+            ctx.lineTo(padding.left, height - padding.bottom);
+            ctx.lineTo(width - padding.right, height - padding.bottom);
+            ctx.stroke();
+
+            // Y축 그리드 및 레이블
+            const maxValue = Math.max(...values);
+            const yInterval = Math.ceil(maxValue / 5 / 1000000) * 1000000;
+            ctx.fillStyle = isDark ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)';
+            ctx.font = '12px sans-serif';
+            ctx.textAlign = 'right';
+
+            for (let i = 0; i <= 5; i++) {
+                const y = height - padding.bottom - (i * chartHeight / 5);
+                const value = (i * yInterval);
+
+                // 그리드
+                ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)';
+                ctx.beginPath();
+                ctx.moveTo(padding.left, y);
+                ctx.lineTo(width - padding.right, y);
+                ctx.stroke();
+
+                // 레이블
+                ctx.fillText((value / 1000000).toFixed(1) + '억', padding.left - 10, y + 4);
+            }
+
+            // 막대 그리기
+            const chartColors = getChartColors();
+            const barWidth = chartWidth / products.length * 0.8;
+            const barGap = chartWidth / products.length * 0.2;
+
+            products.forEach((product, i) => {
+                const x = padding.left + (i * chartWidth / products.length) + (chartWidth / products.length - barWidth) / 2;
+                const barHeight = (productData[product] / yInterval) * (chartHeight / 5);
+                const y = height - padding.bottom - barHeight;
+
+                // 막대
+                ctx.fillStyle = chartColors[i % chartColors.length];
+                ctx.fillRect(x, y, barWidth, barHeight);
+
+                // X축 레이블 (제품명)
+                ctx.save();
+                ctx.translate(x + barWidth / 2, height - padding.bottom + 15);
+                ctx.rotate(-Math.PI / 6);
+                ctx.fillStyle = isDark ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)';
+                ctx.font = 'bold 12px sans-serif';
+                ctx.textAlign = 'right';
+                ctx.fillText(product, 0, 0);
+                ctx.restore();
+
+                // 값 레이블
+                ctx.fillStyle = chartColors[i % chartColors.length];
+                ctx.font = 'bold 12px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(formatNumber(Math.round(productData[product] / 100000) * 100000 / 100000) + '원', x + barWidth / 2, y - 8);
+            });
+
+            // 범례 생성
+            const legend = document.getElementById('barLegend');
+            legend.innerHTML = products.map((product, i) => `
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: ${chartColors[i % chartColors.length]}"></div>
+                    <span>${product}</span>
+                </div>
+            `).join('');
+        }
+
+        // 데이터 테이블 생성
+        function generateTable() {
+            const tbody = document.getElementById('dataTableBody');
+            tbody.innerHTML = salesData.map(item => `
+                <tr>
+                    <td>${item['날짜']}</td>
+                    <td>${item['제품']}</td>
+                    <td>${item['카테고리']}</td>
+                    <td style="text-align: right;">${formatNumber(item['수량'])}</td>
+                    <td style="text-align: right;">${formatNumber(item['단가'])}</td>
+                    <td style="text-align: right;" class="amount-cell">${formatNumber(item['매출액'])}</td>
+                </tr>
+            `).join('');
+        }
+
+        // 다크모드 토글
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const html = document.documentElement;
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                html.classList.add('dark-mode');
+                themeIcon.textContent = '☀️';
+                themeToggle.querySelector('.theme-toggle-label').textContent = '라이트모드';
+            }
+        }
+
+        function toggleTheme() {
+            if (html.classList.contains('dark-mode')) {
+                html.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+                themeIcon.textContent = '🌙';
+                themeToggle.querySelector('.theme-toggle-label').textContent = '다크모드';
+            } else {
+                html.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+                themeIcon.textContent = '☀️';
+                themeToggle.querySelector('.theme-toggle-label').textContent = '라이트모드';
+            }
+            drawLineChart();
+            drawBarChart();
+        }
+
+        loadTheme();
+        themeToggle.addEventListener('click', toggleTheme);
+        themeToggle.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') toggleTheme();
+        });
+
+        // 초기화
+        window.addEventListener('load', () => {
+            drawLineChart();
+            drawBarChart();
+            generateTable();
+        });
+
+        // 창 크기 변경 시 차트 다시 그리기
+        window.addEventListener('resize', () => {
+            drawLineChart();
+            drawBarChart();
+        });
+    </script>
+</body>
+</html>

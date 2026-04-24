@@ -1,0 +1,219 @@
+{
+  "version": "1.0",
+  "agents": {
+    "김비서": {
+      "name": "Kim Secretary Agent",
+      "description": "일일 업무 브리핑 및 현황 관리 에이전트",
+      "enabled": true,
+      "config": {
+        "dataFolder": "./김비서-데이터",
+        "updateFrequency": "daily",
+        "briefingTime": "09:00"
+      }
+    }
+  },
+  "dataManagement": {
+    "dataPath": "./김비서-데이터",
+    "filesToMonitor": [
+      "매출데이터.csv",
+      "업무목록.csv",
+      "주간일정.txt",
+      "프로젝트현황.csv",
+      "회의록.txt"
+    ],
+    "encoding": "utf-8"
+  },
+  "briefingConfig": {
+    "enabled": true,
+    "schedule": "daily",
+    "time": "09:00",
+    "timezone": "Asia/Seoul",
+    "outputFormat": "markdown",
+    "outputPath": "./김비서-데이터/브리핑_{date}.md",
+    "includeMetrics": [
+      "todaySchedule",
+      "urgentTasks",
+      "projectStatus",
+      "salesSummary",
+      "meetingNotes",
+      "tomorrowSchedule",
+      "recommendations"
+    ]
+  },
+  "analysisRules": {
+    "tasks": {
+      "urgent": {
+        "criteria": "마감일이 오늘 또는 내일인 업무",
+        "priority": "높음"
+      },
+      "overdue": {
+        "criteria": "마감일이 지난 업무",
+        "priority": "긴급"
+      },
+      "pending": {
+        "criteria": "상태가 '대기'인 업무",
+        "priority": "높음"
+      }
+    },
+    "projects": {
+      "atRisk": {
+        "criteria": "진행률이 기대치보다 낮은 프로젝트",
+        "alert": true
+      },
+      "nearCompletion": {
+        "criteria": "진행률이 80% 이상인 프로젝트",
+        "alert": true
+      }
+    },
+    "sales": {
+      "topProducts": {
+        "limit": 5,
+        "sortBy": "revenue"
+      },
+      "regionAnalysis": true,
+      "trendAnalysis": true
+    }
+  },
+  "notificationRules": {
+    "enabled": true,
+    "channels": [
+      "console",
+      "file"
+    ],
+    "filters": {
+      "urgentTasks": {
+        "enabled": true,
+        "threshold": "D-1"
+      },
+      "projectRisk": {
+        "enabled": true,
+        "threshold": 0.3
+      },
+      "salesAlert": {
+        "enabled": false
+      }
+    }
+  },
+  "hooks": {
+    "onDataRefresh": {
+      "enabled": true,
+      "actions": [
+        "validateDataIntegrity",
+        "parseCSVFiles",
+        "parseTextFiles",
+        "updateMetrics"
+      ]
+    },
+    "onBriefingGeneration": {
+      "enabled": true,
+      "actions": [
+        "analyzeDeadlines",
+        "extractScheduleInfo",
+        "generateProjectSummary",
+        "calculateSalesMetrics",
+        "formatOutput"
+      ]
+    }
+  },
+  "dataFormats": {
+    "csv": {
+      "delimiter": ",",
+      "encoding": "utf-8",
+      "hasHeader": true
+    },
+    "text": {
+      "encoding": "utf-8",
+      "dateFormat": "YYYY-MM-DD"
+    }
+  },
+  "dateConfig": {
+    "timezone": "Asia/Seoul",
+    "locale": "ko-KR",
+    "dateFormat": "YYYY년 M월 D일",
+    "dayFormat": "ddd"
+  },
+  "functionalities": {
+    "readAllFiles": {
+      "enabled": true,
+      "description": "모든 데이터 파일 읽기",
+      "files": [
+        "매출데이터.csv",
+        "업무목록.csv",
+        "주간일정.txt",
+        "프로젝트현황.csv",
+        "회의록.txt"
+      ]
+    },
+    "extractTodayInfo": {
+      "enabled": true,
+      "description": "오늘의 업무와 일정 추출",
+      "sources": [
+        "업무목록.csv",
+        "주간일정.txt",
+        "프로젝트현황.csv"
+      ]
+    },
+    "latestProjectStatus": {
+      "enabled": true,
+      "description": "최신 업무 현황 정리",
+      "sources": [
+        "프로젝트현황.csv",
+        "업무목록.csv",
+        "회의록.txt"
+      ]
+    },
+    "salesSummary": {
+      "enabled": true,
+      "description": "매출 요약",
+      "sources": [
+        "매출데이터.csv"
+      ],
+      "metrics": [
+        "totalRevenue",
+        "topProducts",
+        "regionAnalysis",
+        "categoryPerformance",
+        "trends"
+      ]
+    },
+    "dailyBriefing": {
+      "enabled": true,
+      "description": "오늘 해야 할 일과 내일 일정을 포함한 브리핑 제공",
+      "includes": [
+        "todaySchedule",
+        "urgentTasks",
+        "inProgressTasks",
+        "projectStatus",
+        "salesMetrics",
+        "meetingInsights",
+        "tomorrowSchedule",
+        "recommendations"
+      ]
+    }
+  },
+  "output": {
+    "briefing": {
+      "format": "markdown",
+      "sections": [
+        "header",
+        "todayScheduleSection",
+        "salesSection",
+        "projectSection",
+        "taskSection",
+        "meetingSection",
+        "tomorrowSection",
+        "alertsSection",
+        "summarySection",
+        "footer"
+      ],
+      "theme": "professional"
+    }
+  },
+  "metadata": {
+    "agentVersion": "1.0",
+    "createdDate": "2026-04-09",
+    "lastUpdated": "2026-04-09",
+    "author": "Claude Agent",
+    "purpose": "일일 업무 자동 브리핑 시스템"
+  }
+}

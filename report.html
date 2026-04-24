@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SubTrackr 사이트 분석 보고서</title>
+    <style>
+        :root {
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-border: rgba(255, 255, 255, 0.4);
+            --accent: #4CAF50;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 네비게이션 */
+        .nav {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 24px;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            overflow-x: auto;
+        }
+
+        .nav-btn {
+            padding: 10px 16px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            background: transparent;
+            color: #666;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            white-space: nowrap;
+            min-height: 44px;
+        }
+
+        .nav-btn:hover {
+            background: rgba(76, 175, 80, 0.1);
+            color: #333;
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        /* Header */
+        .report-header {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .report-header h1 {
+            font-size: 36px;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .report-header p {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .report-date {
+            font-size: 14px;
+            color: #999;
+            margin-top: 15px;
+        }
+
+        /* Grid Layout */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        /* Card Styles */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border-left: 5px solid #667eea;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card.green {
+            border-left-color: #4CAF50;
+        }
+
+        .card.blue {
+            border-left-color: #2196F3;
+        }
+
+        .card.orange {
+            border-left-color: #FF9800;
+        }
+
+        .card.red {
+            border-left-color: #f44336;
+        }
+
+        .card-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-icon {
+            font-size: 28px;
+        }
+
+        .card-content {
+            color: #666;
+            line-height: 1.8;
+        }
+
+        .card-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .card-list li {
+            padding: 8px 0;
+            color: #666;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .card-list li:last-child {
+            border-bottom: none;
+        }
+
+        .card-list li:before {
+            content: "✓ ";
+            color: #4CAF50;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .badge {
+            display: inline-block;
+            background-color: #f0f0f0;
+            color: #666;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin: 5px 5px 5px 0;
+            margin-bottom: 10px;
+        }
+
+        .badge.primary {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .badge.info {
+            background-color: #e3f2fd;
+            color: #1565c0;
+        }
+
+        /* Two Column Layout */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 768px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .report-header h1 {
+                font-size: 28px;
+            }
+        }
+
+        /* Section Title */
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            margin: 50px 0 30px 0;
+            text-align: left;
+        }
+
+        /* Highlight Box */
+        .highlight-box {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid white;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+            color: white;
+        }
+
+        .highlight-box h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .highlight-box p {
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        /* Metric */
+        .metric {
+            text-align: center;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .metric-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+
+        /* Footer */
+        .report-footer {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            color: #999;
+            font-size: 14px;
+            margin-top: 40px;
+        }
+
+        .divider {
+            height: 1px;
+            background-color: #e0e0e0;
+            margin: 30px 0;
+        }
+
+        .pros-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .pros-item:last-child {
+            border-bottom: none;
+        }
+
+        .pros-item strong {
+            color: #4CAF50;
+            margin-right: 8px;
+        }
+
+        .cons-item strong {
+            color: #f44336;
+            margin-right: 8px;
+        }
+
+        .color-box {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 0;
+            padding: 8px 12px;
+            background-color: #f5f5f5;
+            border-radius: 6px;
+        }
+
+        .color-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            border: 2px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 네비게이션 -->
+        <div class="nav">
+            <a href="dashboard.html" class="nav-btn">📊 대시보드</a>
+            <a href="inventory.html" class="nav-btn">📦 인벤토리</a>
+            <a href="orders.html" class="nav-btn">🛒 주문 관리</a>
+            <a href="meeting-result.html" class="nav-btn">📋 회의록</a>
+            <a href="chart.html" class="nav-btn">📈 매출 현황</a>
+            <a href="diagram-view.html" class="nav-btn">📌 업무 프로세스</a>
+            <a href="report.html" class="nav-btn active">📝 사이트 분석</a>
+        </div>
+
+        <!-- Header -->
+        <div class="report-header">
+            <h1>📊 SubTrackr 사이트 분석 보고서</h1>
+            <p><strong>URL:</strong> https://www.subtrac.kr/</p>
+            <p><strong>서비스:</strong> AI 기반 구독 추적 관리 플랫폼</p>
+            <p class="report-date">분석 일시: 2026년 4월 9일</p>
+        </div>
+
+        <!-- Section 1: 기본 정보 -->
+        <h2 class="section-title">1️⃣ 기본 정보</h2>
+        <div class="cards-grid">
+            <div class="card">
+                <div class="card-title">
+                    <span class="card-icon">🎯</span>
+                    서비스 개요
+                </div>
+                <div class="card-content">
+                    <p><strong>SubTrackr</strong>는 은행 로그인 없이 구독료를 추적할 수 있는 AI 기반 금융 관리 웹 애플리케이션입니다.</p>
+                    <p style="margin-top: 15px; color: #4CAF50; font-weight: 600;">💡 핵심 가치: AI 기반 스크린샷 자동 감지 기능</p>
+                </div>
+            </div>
+
+            <div class="card blue">
+                <div class="card-title">
+                    <span class="card-icon">🏢</span>
+                    개발사
+                </div>
+                <div class="card-content">
+                    <p><strong>Company:</strong> HELLOVR, INC.</p>
+                    <p><strong>사용자 평가:</strong> 4.8/5 (120건 리뷰)</p>
+                    <p style="margin-top: 10px; font-size: 14px; color: #999;">높은 사용자 만족도를 유지하고 있습니다.</p>
+                </div>
+            </div>
+
+            <div class="card green">
+                <div class="card-title">
+                    <span class="card-icon">🔧</span>
+                    기술 스택
+                </div>
+                <div class="card-content">
+                    <ul class="card-list">
+                        <li>Framework: Next.js (React 기반)</li>
+                        <li>Font: Nunito 가변 폰트</li>
+                        <li>Styling: CSS 모듈</li>
+                        <li>Theme: Light/Dark 모드 지원</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: 주요 기능 및 범위 -->
+        <h2 class="section-title">2️⃣ 주요 기능 및 범위</h2>
+        <div class="cards-grid">
+            <div class="card orange">
+                <div class="card-title">
+                    <span class="card-icon">🌍</span>
+                    다국어 지원
+                </div>
+                <div class="card-content">
+                    <p><strong>11개 언어</strong> 지원으로 글로벌 서비스 제공</p>
+                    <div style="margin-top: 15px;">
+                        <span class="badge primary">한국어</span>
+                        <span class="badge primary">English</span>
+                        <span class="badge primary">日本語</span>
+                        <span class="badge primary">中文</span>
+                        <span class="badge primary">Español</span>
+                        <span class="badge primary">Português</span>
+                        <span class="badge primary">Deutsch</span>
+                        <span class="badge primary">Français</span>
+                        <span class="badge primary">हिन्दी</span>
+                        <span class="badge primary">العربية</span>
+                        <span class="badge primary">Tiếng Việt</span>
+                    </div>
+                    <p style="margin-top: 15px; font-size: 12px; color: #666;">hrefLang 메타 태그로 각 언어 버전 최적화</p>
+                </div>
+            </div>
+
+            <div class="card blue">
+                <div class="card-title">
+                    <span class="card-icon">💳</span>
+                    서비스 지원 범위
+                </div>
+                <div class="card-content">
+                    <div class="metric">
+                        <div class="metric-number">130+</div>
+                        <div class="metric-label">글로벌 서비스</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-number">16</div>
+                        <div class="metric-label">통화 지원</div>
+                    </div>
+                    <p style="margin-top: 15px; font-size: 13px; color: #666;">광범위한 구독 서비스와 국제 통화를 지원합니다.</p>
+                </div>
+            </div>
+
+            <div class="card green">
+                <div class="card-title">
+                    <span class="card-icon">🤖</span>
+                    AI 기능
+                </div>
+                <div class="card-content">
+                    <ul class="card-list">
+                        <li>스크린샷 자동 감지</li>
+                        <li>구독 정보 자동 추출</li>
+                        <li>지능형 분류</li>
+                        <li>이상 탐지</li>
+                    </ul>
+                    <p style="margin-top: 15px; font-size: 12px; color: #4CAF50; font-weight: 600;">핵심 차별화 포인트</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: 디자인 분석 -->
+        <h2 class="section-title">3️⃣ 디자인 분석</h2>
+        <div class="cards-grid">
+            <div class="card">
+                <div class="card-title">
+                    <span class="card-icon">🎨</span>
+                    색상 구성
+                </div>
+                <div class="card-content">
+                    <p><strong>주 색상:</strong> #414042 (다크 그레이)</p>
+                    <p style="margin-top: 15px;">라이트/다크 모드 지원으로 사용자 선호도에 맞춘 환경 제공</p>
+                    <div style="margin-top: 20px;">
+                        <div class="color-box">
+                            <div class="color-circle" style="background-color: #414042;"></div>
+                            <span>#414042 (Primary)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card blue">
+                <div class="card-title">
+                    <span class="card-icon">🔤</span>
+                    타이포그래피
+                </div>
+                <div class="card-content">
+                    <ul class="card-list">
+                        <li>Font: Nunito 가변 폰트</li>
+                        <li>기본: sans-serif</li>
+                        <li>특성: 안티에일리어싱 처리</li>
+                        <li>효과: 부드럽고 가독성 높은 텍스트</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card green">
+                <div class="card-title">
+                    <span class="card-icon">📱</span>
+                    반응형 설계
+                </div>
+                <div class="card-content">
+                    <ul class="card-list">
+                        <li>모바일 최적화 (device-width)</li>
+                        <li>PWA 지원</li>
+                        <li>초기 확대: 1.0</li>
+                        <li>모든 디바이스 지원</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: SEO 및 최적화 -->
+        <h2 class="section-title">4️⃣ SEO 및 최적화</h2>
+        <div class="cards-grid">
+            <div class="card orange">
+                <div class="card-title">
+                    <span class="card-icon">🔍</span>
+                    검색 엔진 최적화
+                </div>
+                <div class="card-content">
+                    <ul class="card-list">
+                        <li>robots 메타 태그</li>
+                        <li>googlebot 지시문</li>
+                        <li>구조화된 데이터 (Schema.org)</li>
+                        <li>hrefLang 다국어 태그</li>
+                    </ul>
+                    <p style="margin-top: 15px; font-size: 12px; color: #FF9800; font-weight: 600;">✓ SEO 잘 최적화됨</p>
+                </div>
+            </div>
+
+            <div class="card blue">
+                <div class="card-title">
+                    <span class="card-icon">📊</span>
+                    분석 및 광고
+                </div>
+                <div class="card-content">
+                    <ul class="card-list">
+                        <li>Google Analytics</li>
+                        <li>Google AdSense</li>
+                        <li>사용자 행동 추적</li>
+                        <li>광고 수익화</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card green">
+                <div class="card-title">
+                    <span class="card-icon">📦</span>
+                    PWA 기술
+                </div>
+                <div class="card-content">
+                    <ul class="card-list">
+                        <li>manifest.json</li>
+                        <li>apple-touch-icon</li>
+                        <li>오프라인 지원</li>
+                        <li>앱 설치 가능</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 5: 강점 분석 -->
+        <h2 class="section-title">5️⃣ 잘한 점 (Strengths)</h2>
+        <div class="card green" style="margin-bottom: 25px;">
+            <div class="card-title">
+                <span class="card-icon">⭐</span>
+                주요 강점
+            </div>
+            <div class="card-content">
+                <div class="pros-item">
+                    <strong>✓</strong> AI 기반 자동 인식 기능으로 사용자 편의성 극대화
+                </div>
+                <div class="pros-item">
+                    <strong>✓</strong> 11개 언어 지원으로 글로벌 시장 진출
+                </div>
+                <div class="pros-item">
+                    <strong>✓</strong> 130+ 글로벌 서비스 지원으로 광범위한 호환성
+                </div>
+                <div class="pros-item">
+                    <strong>✓</strong> 높은 사용자 만족도 (4.8/5 평점)
+                </div>
+                <div class="pros-item">
+                    <strong>✓</strong> Next.js 활용으로 성능과 확장성 우수
+                </div>
+                <div class="pros-item">
+                    <strong>✓</strong> 라이트/다크 모드로 사용자 경험 개선
+                </div>
+                <div class="pros-item">
+                    <strong>✓</strong> PWA 지원으로 앱 같은 경험 제공
+                </div>
+                <div class="pros-item">
+                    <strong>✓</strong> 완벽한 SEO 최적화 (다국어 포함)
+                </div>
+                <div class="pros-item">
+                    <strong>✓</strong> Nunito 폰트 사용으로 세련된 디자인
+                </div>
+                <div class="pros-item">
+                    <strong>✓</strong> 은행 로그인 불필요로 보안 우려 감소
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 6: 개선 가능 영역 -->
+        <h2 class="section-title">6️⃣ 개선 가능 영역 (Areas for Improvement)</h2>
+        <div class="card red" style="margin-bottom: 25px; border-left-color: #f44336;">
+            <div class="card-title">
+                <span class="card-icon">💡</span>
+                개선 제안
+            </div>
+            <div class="card-content">
+                <div class="pros-item">
+                    <strong>1.</strong> 스크린샷 인식 정확도 지속적 개선 (정확도 벤치마크 공개)
+                </div>
+                <div class="pros-item">
+                    <strong>2.</strong> 더 많은 결제 수단 지원 (암호화폐 등)
+                </div>
+                <div class="pros-item">
+                    <strong>3.</strong> 실시간 알림 기능 강화
+                </div>
+                <div class="pros-item">
+                    <strong>4.</strong> 오프라인 기능 확장
+                </div>
+                <div class="pros-item">
+                    <strong>5.</strong> 통계 및 분석 대시보드 고도화
+                </div>
+                <div class="pros-item">
+                    <strong>6.</strong> 팀 협업 기능 추가
+                </div>
+                <div class="pros-item">
+                    <strong>7.</strong> 더 많은 통화 지원 (현재 16개)
+                </div>
+                <div class="pros-item">
+                    <strong>8.</strong> API 공개로 서드파티 연동 활성화
+                </div>
+                <div class="pros-item">
+                    <strong>9.</strong> 로딩 속도 최적화 (Core Web Vitals)
+                </div>
+                <div class="pros-item">
+                    <strong>10.</strong> 고객 지원 채널 다양화
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 7: 종합 평가 -->
+        <h2 class="section-title">7️⃣ 종합 평가</h2>
+        <div class="highlight-box">
+            <h3>📈 종합 점수: 8.5/10</h3>
+            <p><strong>평가 요소:</strong></p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>기술력: 9/10 (Next.js, PWA, AI 기술)</li>
+                <li>사용자 경험: 8.5/10 (직관적이나 기능 고도화 필요)</li>
+                <li>시장 적응성: 9/10 (다국어/다중 통화 지원)</li>
+                <li>디자인: 8/10 (현대적이나 차별화 필요)</li>
+                <li>SEO 최적화: 9/10 (완벽한 메타데이터 구성)</li>
+            </ul>
+        </div>
+
+        <!-- Section 8: 결론 -->
+        <h2 class="section-title">8️⃣ 결론</h2>
+        <div class="card blue" style="margin-bottom: 40px;">
+            <div class="card-title">
+                <span class="card-icon">🎯</span>
+                핵심 요약
+            </div>
+            <div class="card-content">
+                <p><strong>SubTrackr</strong>는 <span style="color: #4CAF50; font-weight: 600;">AI 기반 구독 추적 서비스</span>로서 혁신적인 기능과 강력한 기술 스택을 갖춘 서비스입니다.</p>
+
+                <p style="margin-top: 15px;"><strong>주목할 점:</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>글로벌 시장을 적극적으로 공략 (11개 언어, 130+ 서비스)</li>
+                    <li>최신 웹 기술 활용 (Next.js, PWA, AI)</li>
+                    <li>사용자 만족도 높음 (4.8/5)</li>
+                    <li>SEO와 마케팅 기초가 견고함</li>
+                </ul>
+
+                <p style="margin-top: 15px;"><strong>향후 방향:</strong></p>
+                <p style="margin-top: 10px;">AI 정확도 개선, 기능 고도화, 고객 경험 최적화를 통해 시장 선도 지위 강화 필요</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="report-footer">
+            <p>이 보고서는 2026년 4월 9일에 자동으로 생성되었습니다.</p>
+            <p>SubTrackr 공식 웹사이트 분석을 바탕으로 작성되었습니다.</p>
+        </div>
+    </div>
+</body>
+</html>

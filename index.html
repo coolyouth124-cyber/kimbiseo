@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SPEAR FIT</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ───────── HEADER ───────── -->
+<header id="header">
+
+  <!-- 최상단 유틸리티 바 -->
+  <div class="util-bar">
+    <div class="inner">
+      <ul class="util-links">
+        <li><a href="#">LOGIN</a></li>
+        <li class="cart-wrap"><a href="#">CART <span class="cart-count">0</span></a></li>
+        <li class="lang-wrap">
+          <a href="#" class="active">KR</a>
+          <span>/</span><a href="#">EN</a>
+          <span>/</span><a href="#">HK</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 로고 + 검색 -->
+  <div class="logo-bar">
+    <div class="inner">
+      <a href="#" class="logo">SPEAR FIT</a>
+      <div class="search-wrap">
+        <input type="text" placeholder="제품을 검색하세요">
+        <button class="search-btn" aria-label="검색">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 메인 GNB -->
+  <nav class="gnb">
+    <div class="inner">
+      <ul class="gnb-list">
+
+        <li class="has-dropdown">
+          <a href="#" class="gnb-link">MENU</a>
+          <div class="dropdown">
+            <ul>
+              <li><a href="#">Eclipse 2.0</a></li>
+              <li><a href="#">26SS FIRST DROP</a></li>
+              <li><a href="#">SF-ESSENTIAL</a></li>
+              <li><a href="#">26SS: Untracked 1st</a></li>
+            </ul>
+          </div>
+        </li>
+
+        <li class="has-dropdown">
+          <a href="#" class="gnb-link">MEN</a>
+          <div class="dropdown">
+            <ul>
+              <li><a href="#">OUTER</a></li>
+              <li><a href="#">TOP</a></li>
+              <li><a href="#">BOTTOM</a></li>
+              <li><a href="#">ACTIVE</a></li>
+            </ul>
+          </div>
+        </li>
+
+        <li class="has-dropdown">
+          <a href="#" class="gnb-link">WOMEN</a>
+          <div class="dropdown">
+            <ul>
+              <li><a href="#">OUTER</a></li>
+              <li><a href="#">TOP</a></li>
+              <li><a href="#">BOTTOM</a></li>
+              <li><a href="#">ACTIVE</a></li>
+            </ul>
+          </div>
+        </li>
+
+        <li class="has-dropdown">
+          <a href="#" class="gnb-link">ACC</a>
+          <div class="dropdown">
+            <ul>
+              <li><a href="#">BAG</a></li>
+              <li><a href="#">CAP</a></li>
+              <li><a href="#">SOCKS</a></li>
+              <li><a href="#">ACC</a></li>
+            </ul>
+          </div>
+        </li>
+
+        <li><a href="#" class="gnb-link">ARCHIVES</a></li>
+        <li><a href="#" class="gnb-link">COMMUNITY</a></li>
+
+      </ul>
+    </div>
+  </nav>
+</header>
+
+<!-- ───────── HERO BANNER ───────── -->
+<section class="hero">
+  <div class="hero-inner">
+    <p class="hero-sub">26 S/S NEW COLLECTION</p>
+    <h2 class="hero-title">BUILT FOR<br>THE RELENTLESS</h2>
+    <a href="#" class="hero-btn">SHOP NOW</a>
+  </div>
+</section>
+
+<!-- ───────── NOTICE MARQUEE ───────── -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span>FREE SHIPPING ON ORDERS OVER ₩100,000</span>
+    <span class="sep">✦</span>
+    <span>26 S/S COLLECTION NOW AVAILABLE</span>
+    <span class="sep">✦</span>
+    <span>SPEAR FIT OFFICIAL STORE</span>
+    <span class="sep">✦</span>
+    <span>FREE SHIPPING ON ORDERS OVER ₩100,000</span>
+    <span class="sep">✦</span>
+    <span>26 S/S COLLECTION NOW AVAILABLE</span>
+    <span class="sep">✦</span>
+    <span>SPEAR FIT OFFICIAL STORE</span>
+    <span class="sep">✦</span>
+  </div>
+</div>
+
+<!-- ───────── SHOP IN (탭 + 상품 그리드) ───────── -->
+<section class="shop-section">
+  <div class="inner">
+
+    <div class="section-head">
+      <h3 class="section-title">SHOP IN</h3>
+      <ul class="tab-list" role="tablist">
+        <li><button class="tab-btn active" data-tab="new">신제품</button></li>
+        <li><button class="tab-btn" data-tab="best">베스트</button></li>
+        <li><button class="tab-btn" data-tab="restock">리스톡</button></li>
+      </ul>
+    </div>
+
+    <!-- 신제품 탭 -->
+    <div class="tab-panel active" id="tab-new">
+      <div class="product-grid">
+
+        <div class="product-card">
+          <div class="product-thumb">
+            <img src="spearfit-track-jacket.png" alt="스피어핏 트랙 자켓" class="product-img">
+            <button class="wish-btn" aria-label="관심상품">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+            </button>
+          </div>
+          <div class="product-info">
+            <p class="product-name">스피어핏 트랙 자켓</p>
+            <p class="product-price">₩129,000</p>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-thumb">
+            <div class="thumb-placeholder"></div>
+            <button class="wish-btn" aria-label="관심상품">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+            </button>
+          </div>
+          <div class="product-info">
+            <p class="product-name">SF Performance Tee</p>
+            <p class="product-price">₩79,000</p>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-thumb">
+            <div class="thumb-placeholder"></div>
+            <button class="wish-btn" aria-label="관심상품">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+            </button>
+          </div>
+          <div class="product-info">
+            <p class="product-name">SF Compression Shorts</p>
+            <p class="product-price">₩89,000</p>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-thumb">
+            <div class="thumb-placeholder"></div>
+            <button class="wish-btn" aria-label="관심상품">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+            </button>
+          </div>
+          <div class="product-info">
+            <p class="product-name">SF Track Pants</p>
+            <p class="product-price">₩129,000</p>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-thumb">
+            <div class="thumb-placeholder"></div>
+            <button class="wish-btn" aria-label="관심상품">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+            </button>
+          </div>
+          <div class="product-info">
+            <p class="product-name">SF Windbreaker</p>
+            <p class="product-price">₩219,000</p>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-thumb">
+            <div class="thumb-placeholder"></div>
+            <button class="wish-btn" aria-label="관심상품">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+            </button>
+          </div>
+          <div class="product-info">
+            <p class="product-name">SF Base Layer Top</p>
+            <p class="product-price">₩69,000</p>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-thumb">
+            <div class="thumb-placeholder"></div>
+            <button class="wish-btn" aria-label="관심상품">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+            </button>
+          </div>
+          <div class="product-info">
+            <p class="product-name">SF Gym Cap</p>
+            <p class="product-price">₩49,000</p>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-thumb">
+            <div class="thumb-placeholder"></div>
+            <button class="wish-btn" aria-label="관심상품">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+            </button>
+          </div>
+          <div class="product-info">
+            <p class="product-name">SF Sport Socks 3-Pack</p>
+            <p class="product-price">₩29,000</p>
+          </div>
+        </div>
+
+      </div>
+      <div class="view-all-wrap">
+        <a href="#" class="view-all-btn">VIEW ALL</a>
+      </div>
+    </div>
+
+    <!-- 베스트 탭 -->
+    <div class="tab-panel" id="tab-best">
+      <div class="product-grid">
+
+        <div class="product-card">
+          <div class="product-thumb">
+            <div class="thumb-placeholder"></div>
+            <button class="wish-btn" aria-label="관심상품">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+            </button>
+            <span class="product-badge">BEST</span>
+          </div>
+          <div class="product-info">
+            <p class="product-name">SF Core Hoodie</p>
+            <p class="product-price">₩159,000</p>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-thumb">
+            <div class="thumb-placeholder"></div>
+            <button class="wish-btn" aria-label="관심상품">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+            </button>
+            <span class="product-badge">BEST</span>
+          </div>
+          <div class="product-info">
+            <p class="product-name">SF Power Jogger</p>
+            <p class="product-price">₩119,000</p>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-thumb">
+            <div class="thumb-placeholder"></div>
+            <button class="wish-btn" aria-label="관심상품">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+            </button>
+            <span class="product-badge">BEST</span>
+          </div>
+          <div class="product-info">
+            <p class="product-name">SF Utility Vest</p>
+            <p class="product-price">₩139,000</p>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-thumb">
+            <div class="thumb-placeholder"></div>
+            <button class="wish-btn" aria-label="관심상품">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+            </button>
+            <span class="product-badge">BEST</span>
+          </div>
+          <div class="product-info">
+            <p class="product-name">SF Flex Tights</p>
+            <p class="product-price">₩99,000</p>
+          </div>
+        </div>
+
+      </div>
+      <div class="view-all-wrap">
+        <a href="#" class="view-all-btn">VIEW ALL</a>
+      </div>
+    </div>
+
+    <!-- 리스톡 탭 -->
+    <div class="tab-panel" id="tab-restock">
+      <div class="product-grid">
+
+        <div class="product-card">
+          <div class="product-thumb">
+            <div class="thumb-placeholder"></div>
+            <button class="wish-btn" aria-label="관심상품">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+            </button>
+            <span class="product-badge restock">RESTOCK</span>
+          </div>
+          <div class="product-info">
+            <p class="product-name">SF Signature Crewneck</p>
+            <p class="product-price">₩149,000</p>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-thumb">
+            <div class="thumb-placeholder"></div>
+            <button class="wish-btn" aria-label="관심상품">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+            </button>
+            <span class="product-badge restock">RESTOCK</span>
+          </div>
+          <div class="product-info">
+            <p class="product-name">SF Logo Tote Bag</p>
+            <p class="product-price">₩59,000</p>
+          </div>
+        </div>
+
+      </div>
+      <div class="view-all-wrap">
+        <a href="#" class="view-all-btn">VIEW ALL</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ───────── FOOTER ───────── -->
+<footer class="footer">
+  <div class="inner">
+
+    <div class="footer-top">
+      <a href="#" class="footer-logo">SPEAR FIT</a>
+      <ul class="footer-policy">
+        <li><a href="#">이용약관</a></li>
+        <li><a href="#">개인정보처리방침</a></li>
+        <li><a href="#">가이드</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-info">
+      <p>COMPANY: 주식회사 스피어핏 &nbsp;|&nbsp; CEO: 홍길동 &nbsp;|&nbsp; BUSINESS LICENSE: 000-00-00000</p>
+      <p>TEL: 070-0000-0000 &nbsp;|&nbsp; EMAIL: cs@spearfit.kr</p>
+      <p>주소: 서울특별시 강남구 테헤란로 000 &nbsp;|&nbsp; 반품: 경기도 화성시 반월로 000</p>
+      <p>개인정보보호담당자: privacy@spearfit.kr</p>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2025 SPEAR FIT. ALL RIGHTS RESERVED.</p>
+    </div>
+
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
