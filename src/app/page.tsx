@@ -8,6 +8,9 @@ import { StatsCard } from '@/components/cards/StatsCard';
 import { TaskCard } from '@/components/cards/TaskCard';
 import { ProjectCard } from '@/components/cards/ProjectCard';
 import { LoadingSpinner } from '@/components/common/LoadingSpinner';
+import { TaskStatusChart } from '@/components/charts/TaskStatusChart';
+import { ProjectProgressChart } from '@/components/charts/ProjectProgressChart';
+import { PriorityDistributionChart } from '@/components/charts/PriorityDistributionChart';
 import { useTasks } from '@/hooks/useTasks';
 import { useProjects } from '@/hooks/useProjects';
 import { useMeetings } from '@/hooks/useMeetings';
@@ -72,6 +75,16 @@ export default function Home() {
                 value={activeProjects}
                 color="orange"
               />
+            </div>
+
+            {/* Charts Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+              <TaskStatusChart tasks={tasks} />
+              <PriorityDistributionChart tasks={tasks} />
+            </div>
+
+            <div className="mb-8">
+              <ProjectProgressChart projects={projects} />
             </div>
 
             {/* Main Content Grid */}
