@@ -1,0 +1,74 @@
+[
+  {
+    "id": "project-001",
+    "title": "웹사이트 리디자인",
+    "status": "in-progress",
+    "progress": 40,
+    "startDate": "2026-02-15",
+    "endDate": "2026-05-31",
+    "team": ["디자인팀", "개발팀", "UX팀"],
+    "budget": 500,
+    "spent": 200,
+    "description": "현재 웹사이트의 UX/UI 개선 및 반응형 디자인 적용"
+  },
+  {
+    "id": "project-002",
+    "title": "모바일 앱 출시",
+    "status": "in-progress",
+    "progress": 35,
+    "startDate": "2026-03-01",
+    "endDate": "2026-06-30",
+    "team": ["앱개발팀", "QA팀"],
+    "budget": 800,
+    "spent": 280,
+    "description": "iOS/Android 네이티브 모바일 애플리케이션 개발"
+  },
+  {
+    "id": "project-003",
+    "title": "고객 경험 개선",
+    "status": "in-progress",
+    "progress": 45,
+    "startDate": "2026-02-01",
+    "endDate": "2026-05-15",
+    "team": ["고객경험팀", "마케팅팀"],
+    "budget": 350,
+    "spent": 157.5,
+    "description": "고객 여정 맵핑 및 터치포인트 최적화"
+  },
+  {
+    "id": "project-004",
+    "title": "마케팅 자동화 시스템 구축",
+    "status": "planning",
+    "progress": 15,
+    "startDate": "2026-03-10",
+    "endDate": "2026-08-31",
+    "team": ["마케팅팀", "IT팀"],
+    "budget": 600,
+    "spent": 90,
+    "description": "이메일, SMS, 소셜미디어 자동화 플랫폼 도입"
+  },
+  {
+    "id": "project-005",
+    "title": "데이터 분석 인프라 구축",
+    "status": "in-progress",
+    "progress": 50,
+    "startDate": "2026-02-20",
+    "endDate": "2026-05-01",
+    "team": ["데이터팀", "IT팀"],
+    "budget": 450,
+    "spent": 225,
+    "description": "실시간 데이터 수집 및 분석 대시보드 구축"
+  },
+  {
+    "id": "project-006",
+    "title": "브랜드 리포지셔닝",
+    "status": "in-progress",
+    "progress": 55,
+    "startDate": "2026-02-01",
+    "endDate": "2026-04-30",
+    "team": ["마케팅팀", "디자인팀", "경영진"],
+    "budget": 280,
+    "spent": 154,
+    "description": "브랜드 아이덴티티 재정의 및 시각화"
+  }
+]

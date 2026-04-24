@@ -1,0 +1,102 @@
+[
+  {
+    "id": "meeting-001",
+    "title": "주간 마케팅 회의",
+    "date": "2026-03-10",
+    "nextDate": "2026-03-17",
+    "attendees": ["김비서", "마케팅팀", "콘텐츠팀", "분석팀"],
+    "type": "weekly",
+    "summary": "Q2 마케팅 전략 및 콘텐츠 계획 논의",
+    "highlights": [
+      "브랜드 포지셔닝 전략 수립",
+      "소셜미디어 콘텐츠 일정 확정",
+      "광고 성과 분석 검토"
+    ],
+    "decisions": [
+      "SNS 게시 빈도를 주 5회로 증대",
+      "인플루언서 마이크로 전략 채택",
+      "광고 예산 배분 재조정"
+    ],
+    "actionItems": [
+      {
+        "id": "action-001",
+        "description": "브랜드 포지셔닝 보고서 작성",
+        "owner": "김비서",
+        "dueDate": "2026-03-20",
+        "status": "in-progress",
+        "relatedMeeting": "meeting-001"
+      },
+      {
+        "id": "action-002",
+        "description": "소셜미디어 콘텐츠 계획 완료",
+        "owner": "콘텐츠팀",
+        "dueDate": "2026-03-22",
+        "status": "in-progress",
+        "relatedMeeting": "meeting-001"
+      },
+      {
+        "id": "action-003",
+        "description": "광고 성과 분석 보고서 제출",
+        "owner": "분석팀",
+        "dueDate": "2026-03-18",
+        "status": "pending",
+        "relatedMeeting": "meeting-001"
+      }
+    ]
+  },
+  {
+    "id": "meeting-002",
+    "title": "브랜드 전략 회의",
+    "date": "2026-03-12",
+    "nextDate": "2026-04-09",
+    "attendees": ["마케팅팀", "디자인팀", "경영진"],
+    "type": "monthly",
+    "summary": "브랜드 리포지셔닝 및 비주얼 아이덴티티 개선",
+    "highlights": [
+      "로고 및 색상 팔레트 개선",
+      "브랜드 가이드라인 업데이트",
+      "타겟 고객층 재분석"
+    ],
+    "decisions": [
+      "신 브랜드 아이덴티티 도입 결정",
+      "웹사이트 리디자인 프로젝트 시작"
+    ],
+    "actionItems": [
+      {
+        "id": "action-004",
+        "description": "브랜드 가이드라인 업데이트",
+        "owner": "디자인팀",
+        "dueDate": "2026-04-01",
+        "status": "pending",
+        "relatedMeeting": "meeting-002"
+      }
+    ]
+  },
+  {
+    "id": "meeting-003",
+    "title": "프로젝트 진행 상황 보고",
+    "date": "2026-03-13",
+    "attendees": ["프로젝트팀", "스폰서", "김비서"],
+    "type": "weekly",
+    "summary": "6개 프로젝트 진행률 및 위험 요인 검토",
+    "highlights": [
+      "웹사이트 리디자인 프로젝트 40% 진행",
+      "모바일 앱 출시 프로젝트 35% 진행",
+      "고객 경험 개선 프로젝트 45% 진행"
+    ],
+    "decisions": [
+      "고객 경험 개선 프로젝트 예산 10% 추가 배정",
+      "위험 관리 계획 강화"
+    ],
+    "actionItems": [
+      {
+        "id": "action-005",
+        "description": "프로젝트 위험 요인 분석 및 대응책 수립",
+        "owner": "프로젝트팀",
+        "dueDate": "2026-03-20",
+        "status": "pending",
+        "relatedMeeting": "meeting-003"
+      }
+    ]
+  }
+]

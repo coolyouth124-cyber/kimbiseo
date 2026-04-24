@@ -1,0 +1,123 @@
+[
+  {
+    "id": "task-001",
+    "title": "브랜드 포지셔닝 보고서 작성",
+    "description": "Q2 마케팅 전략을 위한 브랜드 포지셔닝 분석",
+    "assignee": "김비서",
+    "priority": "urgent",
+    "status": "in-progress",
+    "dueDate": "2026-03-20",
+    "createdAt": "2026-03-10",
+    "category": "strategy"
+  },
+  {
+    "id": "task-002",
+    "title": "소셜미디어 콘텐츠 계획",
+    "description": "3월-4월 SNS 게시물 일정표 작성",
+    "assignee": "콘텐츠팀",
+    "priority": "high",
+    "status": "in-progress",
+    "dueDate": "2026-03-22",
+    "createdAt": "2026-03-10",
+    "category": "content"
+  },
+  {
+    "id": "task-003",
+    "title": "이메일 뉴스레터 구성",
+    "description": "주간 뉴스레터 템플릿 및 콘텐츠 계획",
+    "assignee": "뉴스레터팀",
+    "priority": "high",
+    "status": "pending",
+    "dueDate": "2026-03-25",
+    "createdAt": "2026-03-11",
+    "category": "email"
+  },
+  {
+    "id": "task-004",
+    "title": "광고 성과 분석 보고서",
+    "description": "지난달 광고 캠페인의 ROI 및 성과 분석",
+    "assignee": "분석팀",
+    "priority": "high",
+    "status": "pending",
+    "dueDate": "2026-03-18",
+    "createdAt": "2026-03-10",
+    "category": "analytics"
+  },
+  {
+    "id": "task-005",
+    "title": "경쟁사 분석",
+    "description": "주요 경쟁사 마케팅 전략 조사 및 분석",
+    "assignee": "마케팅팀",
+    "priority": "medium",
+    "status": "pending",
+    "dueDate": "2026-03-21",
+    "createdAt": "2026-03-10",
+    "category": "research"
+  },
+  {
+    "id": "task-006",
+    "title": "웹사이트 UX 개선안 검토",
+    "description": "사용자 피드백을 반영한 웹사이트 개선점 정리",
+    "assignee": "UX팀",
+    "priority": "medium",
+    "status": "pending",
+    "dueDate": "2026-03-23",
+    "createdAt": "2026-03-10",
+    "category": "product"
+  },
+  {
+    "id": "task-007",
+    "title": "인플루언서 협업 계획",
+    "description": "마이크로 인플루언서 선정 및 협업 시안",
+    "assignee": "파트너십팀",
+    "priority": "medium",
+    "status": "pending",
+    "dueDate": "2026-03-24",
+    "createdAt": "2026-03-11",
+    "category": "partnership"
+  },
+  {
+    "id": "task-008",
+    "title": "브랜드 가이드라인 업데이트",
+    "description": "로고, 색상, 폰트 등 브랜드 요소 표준화",
+    "assignee": "디자인팀",
+    "priority": "low",
+    "status": "pending",
+    "dueDate": "2026-04-01",
+    "createdAt": "2026-03-11",
+    "category": "brand"
+  },
+  {
+    "id": "task-009",
+    "title": "세미나 및 웨비나 기획",
+    "description": "Q2 온라인 세미나 주제 및 일정 계획",
+    "assignee": "이벤트팀",
+    "priority": "low",
+    "status": "pending",
+    "dueDate": "2026-04-05",
+    "createdAt": "2026-03-11",
+    "category": "event"
+  },
+  {
+    "id": "task-010",
+    "title": "PR 보도자료 작성",
+    "description": "신제품 출시 관련 보도자료 작성",
+    "assignee": "PR팀",
+    "priority": "urgent",
+    "status": "pending",
+    "dueDate": "2026-03-19",
+    "createdAt": "2026-03-10",
+    "category": "pr"
+  },
+  {
+    "id": "task-011",
+    "title": "마케팅 예산 검토",
+    "description": "Q2 마케팅 예산 배분 및 최적화",
+    "assignee": "재무팀",
+    "priority": "high",
+    "status": "pending",
+    "dueDate": "2026-03-17",
+    "createdAt": "2026-03-10",
+    "category": "finance"
+  }
+]
