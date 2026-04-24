@@ -5,10 +5,10 @@ import { Header } from '@/components/layout/Header';
 import { Navigation } from '@/components/layout/Navigation';
 import { ThemeToggle } from '@/components/layout/ThemeToggle';
 import { TaskCard } from '@/components/cards/TaskCard';
-import { Badge } from '@/components/common/Badge';
+
 import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 import { useTasks } from '@/hooks/useTasks';
-import { TASK_STATUS, TASK_PRIORITY } from '@/data/constants';
+
 
 export default function TasksPage() {
   const { tasks, loading } = useTasks();
